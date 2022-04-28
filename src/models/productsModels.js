@@ -109,7 +109,6 @@ const deleteProduct = (id) => {
     });
 };
 
-
 const searchProduct = (query) => {
     return new Promise((resolve, reject) => {
         const productName = query.product_name;
