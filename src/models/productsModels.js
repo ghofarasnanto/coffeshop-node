@@ -52,27 +52,6 @@ const getSingleProductFromServer = (id) => {
     });
 };
 
-const searchProduct = (query) => {
-    return new Promise((resolve, reject) => {
-        const productName = query.productName;
-        const sqlQuery = "select * from products where product_name like '%' || $1 || '%'";
-        db.query(sqlQuery, productName)
-            .then((result) => {
-                if (result.rows.length === 0) {
-                    return reject({ status: 404, err: "product Not Found" });
-                }
-                const response = {
-                    total: result.rowCount,
-                    data: result.rows,
-                };
-                resolve(response);
-            })
-            .catch((err) => {
-                reject({ status: 500, err });
-            });
-    });
-};
-
 const findProduct = (query) => {
     return new Promise((resolve, reject) => {
         // asumsikan query berisikan category, order, sort
@@ -131,6 +110,26 @@ const deleteProduct = (id) => {
 };
 
 
+const searchProduct = (query) => {
+    return new Promise((resolve, reject) => {
+        const productName = query.product_name;
+        const sqlQuery = "select * from products where lower(product_name) like lower('%' || $1 || '%')";
+        db.query(sqlQuery, [productName])
+            .then((result) => {
+                if (result.rows.length === 0) {
+                    return reject({ status: 404, err: "product Not Found" });
+                }
+                const response = {
+                    total: result.rowCount,
+                    data: result.rows,
+                };
+                resolve(response);
+            })
+            .catch((err) => {
+                reject({ status: 500, err });
+            });
+    });
+};
 module.exports = {
     createProduct,
     listAllProducts,

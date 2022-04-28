@@ -13,6 +13,6 @@ Router.delete("/:id", promosController.remove);
 // Update promo
 Router.put("/:id", promosController.update);
 // search promo
-Router.get("/", promosController.search);
+Router.get("/search", promosController.search);
 
 module.exports = Router;

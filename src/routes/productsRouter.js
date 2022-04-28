@@ -9,6 +9,8 @@ const productsControllers = require("../controllers/productsControllers");
 Router.post("/", productsControllers.create);
 // melakukan pencarian product
 // Router.get("/", productsControllers.getAll);
+// Search product 
+Router.get("/search", productsControllers.search);
 // mendapatkan product 
 Router.get("/", productsControllers.filterProduct);
 // mendapatkan product byId
@@ -17,8 +19,6 @@ Router.get("/:id", productsControllers.showById);
 Router.put("/:id", productsControllers.update);
 // Menghapus product
 Router.delete("/:id", productsControllers.remove);
-// Search product 
-Router.get("/", productsControllers.search);
 
 
 

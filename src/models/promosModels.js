@@ -65,8 +65,8 @@ const updatePromo = (id, body) => {
 
 const searchPromo = (query) => {
     return new Promise((resolve, reject) => {
-        const promoName = query.promoName;
-        const sqlQuery = "SELECT * FROM promos WHERE promo_name like '%' || $1 || '%'";
+        const promoName = query.promo_name;
+        const sqlQuery = "select * from promos where lower(promo_name) like lower('%' || $1 || '%')";
         db.query(sqlQuery, [promoName])
             .then((result) => {
                 if (result.rows.length === 0) {
