@@ -1,14 +1,13 @@
-const promosModels = require("../models/promosModels");
+const transactionsModels = require("../models/transactionsModels");
 const {
-    createPromo,
-    listAllPromo,
-    deletePromo,
-    updatePromo,
-    searchPromo
-} = promosModels;
+    createTransaction,
+    listAllTransactions,
+    updateTransaction,
+    deleteTransaction
+} = transactionsModels;
 
 const create = (req, res) => {
-    createPromo(req.body)
+    createTransaction(req.body)
         .then(({ data }) => {
             res.status(200).json({
                 data,
@@ -23,7 +22,7 @@ const create = (req, res) => {
 };
 
 const getAll = (_, res) => {
-    listAllPromo()
+    listAllTransactions()
         .then(({ data, total }) => {
             res.status(200).json({
                 data,
@@ -39,7 +38,7 @@ const getAll = (_, res) => {
 };
 
 const remove = (req, res) => {
-    deletePromo(req.params.id)
+    deleteTransaction(req.params.id)
         .then(({ data }) => {
             res.status(200).json({
                 data,
@@ -54,7 +53,7 @@ const remove = (req, res) => {
 };
 
 const update = (req, res) => {
-    updatePromo(req.params.id, req.body)
+    updateTransaction(req.params.id, req.body)
         .then((result) => {
             const { data } = result;
             res.status(200).json({
@@ -69,30 +68,10 @@ const update = (req, res) => {
             });
         });
 };
-
-const search = (req, res) => {
-    searchPromo(req.query)
-        .then(({ data, total }) => {
-            res.status(200).json({
-                data,
-                total,
-            });
-        })
-        .catch(({ status, err }) => {
-            res.status(status).json({
-                data: [],
-                err,
-            });
-        });
-};
-
-
 // shorthand object
 module.exports = {
     create,
     getAll,
-    remove,
     update,
-    search
-
+    remove
 };
