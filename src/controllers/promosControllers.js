@@ -10,14 +10,15 @@ const {
 const create = (req, res) => {
     createPromo(req.body)
         .then(({ data }) => {
-            res.status(200).json({
+            return res.status(201).send({
+                message: "Created Promo Success",
                 data,
             });
         })
-        .catch(({ status, err }) => {
-            res.status(status).json({
-                data: [],
-                err,
+        .catch(({ err }) => {
+            res.status(400).send({
+                message: "Created Promo Failed",
+                errors: err
             });
         });
 };
@@ -30,10 +31,10 @@ const getAll = (_, res) => {
                 total,
             });
         })
-        .catch(({ status, err }) => {
-            res.status(status).json({
-                data: [],
-                err,
+        .catch(({ err }) => {
+            res.status(400).send({
+                message: "Promo Not Found",
+                errors: err
             });
         });
 };

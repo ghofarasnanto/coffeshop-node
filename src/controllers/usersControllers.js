@@ -8,14 +8,15 @@ const {
 const create = (req, res) => {
     createUser(req.body)
         .then(({ data }) => {
-            res.status(200).json({
+            return res.status(200).send({
+                message: "Created User Success",
                 data,
             });
         })
-        .catch(({ status, err }) => {
-            res.status(status).json({
-                data: [],
-                err,
+        .catch(({ err }) => {
+            res.status(400).send({
+                message: "Created User Failed",
+                errors: err
             });
         });
 };
@@ -28,27 +29,29 @@ const getAll = (_, res) => {
                 total,
             });
         })
-        .catch(({ status, err }) => {
-            res.status(status).json({
-                data: [],
-                err,
+        .catch(({ err }) => {
+            res.status(400).send({
+                message: "User Not Found",
+                errors: err
             });
         });
 };
 
 const update = (req, res) => {
-    updateUser(req.params.id, req.body)
+    const image = req.file ? req.file.path.replace("public", "").replace(/\\/g, "/") : null;
+    updateUser(req.params.username, req.body, image)
         .then((result) => {
             const { data } = result;
-            res.status(200).json({
+            return res.status(200).send({
+                message: "Update User Success",
                 data,
             });
         })
         .catch((error) => {
-            const { err, status } = error;
-            res.status(status).json({
-                err,
-                data: {},
+            const { err } = error;
+            res.status(400).send({
+                message: "Update User Failed",
+                errors: err
             });
         });
 };

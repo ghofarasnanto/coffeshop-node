@@ -4,7 +4,7 @@ const createProduct = (body) => {
     return new Promise((resolve, reject) => {
         const { product_name, description, price } = body;
         const sqlQuery =
-            "INSERT INTO products(product_name, description, price) VALUES ($1, $2, $3);";
+            "INSERT INTO products(product_name, description, price) VALUES ($1, $2, $3) RETURNING *;";
         db.query(sqlQuery, [product_name, description, price])
             .then(result => {
                 const response = {
@@ -13,6 +13,7 @@ const createProduct = (body) => {
                 resolve(response);
             })
             .catch((err) => reject({ status: 500, err }));
+
     });
 };
 
@@ -32,14 +33,14 @@ const listAllProducts = () => {
     });
 };
 
-const getSingleProductFromServer = (id) => {
+const getSingleProduct = (id) => {
     return new Promise((resolve, reject) => {
         // parameterized query
         const sqlQuery = "select * from products where id = $1";
         db.query(sqlQuery, [id])
             .then((data) => {
                 if (data.rows.length === 0) {
-                    return reject({ status: 404, err: "Book Not Found" });
+                    return reject({ status: 404, err: "Product Not Found" });
                 }
                 const response = {
                     data: data.rows[0],
@@ -55,22 +56,41 @@ const getSingleProductFromServer = (id) => {
 const findProduct = (query) => {
     return new Promise((resolve, reject) => {
         // asumsikan query berisikan category, order, sort
-        const { category, order, sort } = query;
-        let sqlQuery = !category ? "SELECT * FROM products" : "select * from products where lower(category) like lower('%' || $1 || '%')";
+        const { category, product_name, order, sort, limit = 4, page = 1 } = query;
+        let sqlQuery = !product_name ? "SELECT * FROM products" : "select *, products.id as id from products INNER JOIN category ON products.category_id=category.id where lower(product_name) like lower ('%' || $1 || '%')";
+        if (category) {
+            sqlQuery += " AND category_id=$2";
+        }
         if (order) {
             sqlQuery += " order by " + order + " " + sort;
         }
+        const offset = (parseInt(page) - 1) * Number(limit);
+        sqlQuery += " LIMIT " + Number(limit) + " OFFSET " + offset;
+        // console.log(sqlQuery);
         // ternary if !category ? null : [category]; if (?) category undefined set null else (:) set [category]
-        db.query(sqlQuery, !category ? null : [category])
+        let params = !product_name ? null : [product_name];
+        if (category) {
+            params.push(category);
+        }
+        db.query(sqlQuery, params)
             .then((result) => {
                 if (result.rows.length === 0) {
                     return reject({ status: 404, err: "product Not Found" });
                 }
                 const response = {
-                    total: result.rowCount,
                     data: result.rows,
                 };
-                resolve(response);
+                db.query("SELECT COUNT(*) AS total FROM products")
+                    .then((result) => {
+                        response.total_data = parseInt(result.rows[0]["total"]);
+                        response.page = parseInt(page);
+                        response.per_page = parseInt(limit);
+                        response.total_page = Math.ceil(
+                            response.total_data / response.per_page
+                        );
+                        resolve(response);
+                        console.log(response);
+                    });
             })
             .catch((err) => {
                 reject({ status: 500, err });
@@ -78,12 +98,14 @@ const findProduct = (query) => {
     });
 };
 
-const updateProduct = (id, body) => {
+const updateProduct = (id, body, image) => {
     return new Promise((resolve, reject) => {
         const { product_name, price, description } = body;
         const sqlQuery =
-            "UPDATE products SET product_name=$1, price=$2, description=$3 WHERE id = $4";
-        db.query(sqlQuery, [product_name, price, description, id])
+            "UPDATE products SET product_name=COALESCE($1, product_name), price=COALESCE($2, price), description=COALESCE($3, description), updated_at=$4, image=COALESCE($5, image) WHERE id=$6 RETURNING *";
+        const timestamp = new Date(Date.now());
+        console.log(sqlQuery);
+        db.query(sqlQuery, [product_name, price, description, timestamp, image, id])
             .then(({ rows }) => {
                 const response = {
                     data: rows[0],
@@ -97,7 +119,7 @@ const updateProduct = (id, body) => {
 const deleteProduct = (id) => {
     return new Promise((resolve, reject) => {
         const sqlQuery =
-            "DELETE FROM products WHERE id = $1 RETURNING *";
+            "DELETE FROM products WHERE id = $1";
         db.query(sqlQuery, [id])
             .then(({ body }) => {
                 const response = {
@@ -112,7 +134,7 @@ const deleteProduct = (id) => {
 const searchProduct = (query) => {
     return new Promise((resolve, reject) => {
         const productName = query.product_name;
-        const sqlQuery = "select * from products where lower(product_name) like lower('%' || $1 || '%')";
+        const sqlQuery = "select * from products where lower(product_name) like lower('%' || $1 || '%') ";
         db.query(sqlQuery, [productName])
             .then((result) => {
                 if (result.rows.length === 0) {
@@ -132,7 +154,7 @@ const searchProduct = (query) => {
 module.exports = {
     createProduct,
     listAllProducts,
-    getSingleProductFromServer,
+    getSingleProduct,
     searchProduct,
     findProduct,
     updateProduct,

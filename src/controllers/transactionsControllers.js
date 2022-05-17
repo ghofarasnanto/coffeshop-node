@@ -9,14 +9,15 @@ const {
 const create = (req, res) => {
     createTransaction(req.body)
         .then(({ data }) => {
-            res.status(200).json({
+            return res.status(201).send({
+                message: "Order Product Success",
                 data,
             });
         })
-        .catch(({ status, err }) => {
-            res.status(status).json({
-                data: [],
-                err,
+        .catch(({ err }) => {
+            res.status(400).send({
+                message: "Order Product Failed",
+                errors: err
             });
         });
 };

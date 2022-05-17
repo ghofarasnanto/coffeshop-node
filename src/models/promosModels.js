@@ -2,10 +2,11 @@ const db = require("../config/db");
 
 const createPromo = (body) => {
     return new Promise((resolve, reject) => {
-        const { promo_name, description_promo, promo_code } = body;
+        const { promo_name, description_promo, promo_code, date_start, end_date } = body;
         const sqlQuery =
-            "INSERT INTO promos(promo_name, description_promo, promo_code) VALUES ($1, $2, $3);";
-        db.query(sqlQuery, [promo_name, description_promo, promo_code])
+            "INSERT INTO promos(promo_name, description_promo, promo_code, date_start, end_date, created_at) VALUES ($1, $2, $3, $4, $5, $6);";
+        const timestamp = new Date(Date.now());
+        db.query(sqlQuery, [promo_name, description_promo, promo_code, date_start, end_date, timestamp])
             .then(result => {
                 const response = {
                     data: result.body,
@@ -51,8 +52,9 @@ const updatePromo = (id, body) => {
     return new Promise((resolve, reject) => {
         const { promo_name, description_promo, promo_code } = body;
         const sqlQuery =
-            "UPDATE promos SET promo_name=$1, description_promo=$2, promo_code=$3 WHERE id = $4";
-        db.query(sqlQuery, [promo_name, description_promo, promo_code, id])
+            "UPDATE promos SET promo_name=COALESCE($1, promo_name), description_promo=COALESCE($2, description_promo), promo_code=COALESCE($3, promo_code), timestamp=$4 WHERE id=$5 RETURNING*";
+        const timestamp = new Date(Date.now());
+        db.query(sqlQuery, [promo_name, description_promo, promo_code, timestamp, id])
             .then(({ rows }) => {
                 const response = {
                     data: rows[0],

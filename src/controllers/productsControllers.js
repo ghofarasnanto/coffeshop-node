@@ -4,7 +4,7 @@ const {
     // listAllProducts,
     searchProduct,
     findProduct,
-    getSingleProductFromServer,
+    getSingleProduct,
     updateProduct,
     deleteProduct
 } = productsModels;
@@ -12,14 +12,15 @@ const {
 const create = (req, res) => {
     createProduct(req.body)
         .then(({ data }) => {
-            res.status(200).json({
+            return res.status(201).send({
+                message: "Created Product Success",
                 data,
             });
         })
-        .catch(({ status, err }) => {
-            res.status(status).json({
-                data: [],
-                err,
+        .catch(({ err }) => {
+            res.status(400).send({
+                message: "Created Product Failed",
+                errors: err
             });
         });
 };
@@ -42,6 +43,7 @@ const create = (req, res) => {
 // };
 
 const filterProduct = (req, res) => {
+
     findProduct(req.query)
         .then(({ data, total }) => {
             res.status(200).json({
@@ -49,17 +51,17 @@ const filterProduct = (req, res) => {
                 total,
             });
         })
-        .catch(({ status, err }) => {
-            res.status(status).json({
-                data: [],
-                err,
+        .catch(({ err }) => {
+            res.status(400).send({
+                message: "Product Not Found",
+                errors: err
             });
         });
 };
 
 const showById = (req, res) => {
     const id = req.params.id;
-    getSingleProductFromServer(id)
+    getSingleProduct(id)
         .then(({ data }) => {
             res.status(200).json({
                 data,
@@ -78,7 +80,8 @@ const showById = (req, res) => {
 const remove = (req, res) => {
     deleteProduct(req.params.id)
         .then(({ data }) => {
-            res.status(200).json({
+            return res.status(200).send({
+                message: "Deleted Product Success",
                 data,
             });
         })
@@ -91,17 +94,20 @@ const remove = (req, res) => {
 };
 
 const update = (req, res) => {
-    updateProduct(req.params.id, req.body)
+    const image = req.file ? req.file.path.replace("public", "").replace(/\\/g, "/") : null;
+    updateProduct(req.params.id, req.body, image)
         .then((result) => {
             const { data } = result;
-            res.status(200).json({
+            return res.status(200).send({
+                message: "Update Product Success",
                 data,
             });
         })
         .catch((error) => {
-            const { err, status } = error;
-            res.status(status).json({
-                err,
+            const { err } = error;
+            res.status(500).send({
+                message: "Update Product Failed",
+                errors: err,
                 data: {},
             });
         });
@@ -110,15 +116,16 @@ const update = (req, res) => {
 const search = (req, res) => {
     searchProduct(req.query)
         .then(({ data, total }) => {
-            res.status(200).json({
+            return res.status(200).send({
+                message: "Product Found",
                 data,
                 total,
             });
         })
         .catch(({ status, err }) => {
             res.status(status).json({
-                data: [],
                 err,
+                data: [],
             });
         });
 };

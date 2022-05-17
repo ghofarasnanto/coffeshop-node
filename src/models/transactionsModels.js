@@ -36,7 +36,7 @@ const updateTransaction = (id, body) => {
     return new Promise((resolve, reject) => {
         const { product_name, price, description } = body;
         const sqlQuery =
-            "UPDATE products SET product_name=$1, price=$2, description=$3 WHERE id = $4";
+            "UPDATE products SET product_name=$1, price=$2, description=$3 WHERE id = $4 RETURNING*";
         db.query(sqlQuery, [product_name, price, description, id])
             .then(({ rows }) => {
                 const response = {

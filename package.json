@@ -12,13 +12,17 @@
     "author": "ghofar",
     "license": "ISC",
     "dependencies": {
+        "bcrypt": "^5.0.1",
         "cors": "^2.8.5",
         "dotenv": "^16.0.0",
         "express": "^4.18.0",
         "express-promise-router": "^4.1.1",
         "i": "^0.3.7",
+        "jsonwebtoken": "^8.5.1",
         "morgan": "^1.10.0",
-        "pg": "^8.7.3"
+        "multer": "^1.4.4",
+        "pg": "^8.7.3",
+        "uuid": "^8.3.2"
     },
     "devDependencies": {
         "eslint": "^8.14.0",
