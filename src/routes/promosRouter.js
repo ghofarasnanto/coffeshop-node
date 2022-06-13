@@ -6,7 +6,7 @@ const promosController = require("../controllers/promosControllers");
 const { checkToken } = require("../middlewares/auth");
 
 // memasukkan promo baru
-Router.post("/", checkToken, promosController.create);
+Router.post("/create", checkToken, promosController.create);
 // memfilter promo
 Router.get("/", promosController.getAll);
 // delete promo by ID

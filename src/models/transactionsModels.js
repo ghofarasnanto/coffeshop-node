@@ -32,6 +32,26 @@ const listAllTransactions = () => {
     });
 };
 
+const TransactionsById = (id) => {
+    return new Promise((resolve, reject) => {
+        // parameterized query
+        const sqlQuery = "SELECT * from transactions where id = $1";
+        db.query(sqlQuery, [id])
+            .then((data) => {
+                if (data.rows.length === 0) {
+                    return reject({ status: 404, err: "Transaction Not Found" });
+                }
+                const response = {
+                    data: data.rows[0],
+                };
+                resolve(response);
+            })
+            .catch((err) => {
+                reject({ status: 500, err });
+            });
+    });
+};
+
 const updateTransaction = (id, body) => {
     return new Promise((resolve, reject) => {
         const { product_name, price, description } = body;
@@ -65,6 +85,7 @@ const deleteTransaction = (id) => {
 module.exports = {
     createTransaction,
     listAllTransactions,
+    TransactionsById,
     updateTransaction,
     deleteTransaction
 };

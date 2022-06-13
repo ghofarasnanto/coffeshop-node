@@ -42,14 +42,20 @@ const create = (req, res) => {
 //         });
 // };
 
-const filterProduct = (req, res) => {
+
+const filterProduct = (req, res, next) => {
 
     findProduct(req.query)
-        .then(({ data, total }) => {
+        .then(({ data, total_data, result, page, per_page, total_page }) => {
             res.status(200).json({
                 data,
-                total,
+                total_data,
+                result,
+                page,
+                per_page,
+                total_page
             });
+            next();
         })
         .catch(({ err }) => {
             res.status(400).send({

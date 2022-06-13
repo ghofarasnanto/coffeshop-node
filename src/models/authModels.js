@@ -1,12 +1,12 @@
 const { v4: uuidV4 } = require("uuid");
 const db = require("../config/db");
 
-const register = (email, username, hashedPassword) => {
+const register = (email, mobilenumber, hashedPassword) => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = "INSERT INTO users (id, email_address, username, password, created_at) VALUES ($1, $2, $3, $4, $5)";
+        const sqlQuery = "INSERT INTO users (id, email_address, mobile_number, password, created_at) VALUES ($1, $2, $3, $4, $5)";
         const id = uuidV4();
         const timestamp = new Date(Date.now());
-        const values = [id, email, username, hashedPassword, timestamp];
+        const values = [id, email, mobilenumber, hashedPassword, timestamp];
         db.query(sqlQuery, values)
             .then(() => {
                 resolve();
@@ -36,10 +36,10 @@ const getPassByUserEmail = async(email) => {
         const result = await db.query(sqlQuery, [email]);
         // cek apakah ada pass
         if (result.rowCount === 0)
-            throw { status: 400, err: { msg: "Email is not registered" } };
+            throw { status: 500, err: { msg: "Input Required" } };
         return result.rows[0];
     } catch (error) {
-        const { status = 500, err } = error;
+        const { status, err } = error;
         throw { status, err };
     }
 };

@@ -32,6 +32,27 @@ const listAllUser = () => {
     });
 };
 
+const getSingleUser = (id) => {
+    return new Promise((resolve, reject) => {
+        // parameterized query
+        const sqlQuery = "select * from users where id = $1";
+        db.query(sqlQuery, [id])
+            .then((data) => {
+                if (data.rows.length === 0) {
+                    return reject({ status: 404, err: "User Not Found" });
+                }
+                const response = {
+                    data: data.rows[0],
+                };
+                resolve(response);
+            })
+            .catch((err) => {
+                reject({ status: 500, err });
+            });
+    });
+};
+
+
 const updateUser = (id, body, image) => {
     return new Promise((resolve, reject) => {
         const { email_address, delivery_address, mobile_number, username, first_name, last_name, birth_date } = body;
@@ -51,5 +72,6 @@ const updateUser = (id, body, image) => {
 module.exports = {
     createUser,
     listAllUser,
+    getSingleUser,
     updateUser
 };

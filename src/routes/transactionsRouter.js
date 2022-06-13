@@ -9,6 +9,8 @@ const { checkToken } = require("../middlewares/auth");
 Router.post("/create", checkToken, transactionsController.create);
 //melakukan pencarian transaction
 Router.get("/", transactionsController.getAll);
+// transaction by id
+Router.get("/:id", transactionsController.getById);
 // Update transaction
 Router.put("/:id", checkToken, transactionsController.update);
 // Menghapus transaction

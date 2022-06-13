@@ -2,6 +2,7 @@ const usersModels = require("../models/usersModels");
 const {
     createUser,
     listAllUser,
+    getSingleUser,
     updateUser
 } = usersModels;
 
@@ -37,6 +38,24 @@ const getAll = (_, res) => {
         });
 };
 
+const getById = (req, res) => {
+    const id = req.params.id;
+    getSingleUser(id)
+        .then(({ data }) => {
+            res.status(200).json({
+                data,
+            });
+        })
+        .catch((error) => {
+            const { err, status } = error;
+            res.status(status).json({
+                // return empty object
+                data: {},
+                err,
+            });
+        });
+};
+
 const update = (req, res) => {
     const image = req.file ? req.file.path.replace("public", "").replace(/\\/g, "/") : null;
     updateUser(req.params.username, req.body, image)
@@ -59,5 +78,6 @@ const update = (req, res) => {
 module.exports = {
     create,
     getAll,
+    getById,
     update
 };

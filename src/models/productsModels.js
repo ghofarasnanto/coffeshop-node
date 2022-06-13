@@ -56,9 +56,12 @@ const getSingleProduct = (id) => {
 const findProduct = (query) => {
     return new Promise((resolve, reject) => {
         // asumsikan query berisikan category, order, sort
-        const { category, product_name, order, sort, limit = 4, page = 1 } = query;
+        const { product_name, category, order, sort, limit = 4, page = 1 } = query;
         let sqlQuery = !product_name ? "SELECT * FROM products" : "select *, products.id as id from products INNER JOIN category ON products.category_id=category.id where lower(product_name) like lower ('%' || $1 || '%')";
-        if (category) {
+        if (!product_name && category) {
+            sqlQuery += " WHERE category_id=$1";
+        }
+        if (product_name && category) {
             sqlQuery += " AND category_id=$2";
         }
         if (order) {
@@ -68,9 +71,9 @@ const findProduct = (query) => {
         sqlQuery += " LIMIT " + Number(limit) + " OFFSET " + offset;
         // console.log(sqlQuery);
         // ternary if !category ? null : [category]; if (?) category undefined set null else (:) set [category]
-        let params = !product_name ? null : [product_name];
+        let params = !product_name ? [] : [product_name];
         if (category) {
-            params.push(category);
+            params.push(parseInt(category));
         }
         db.query(sqlQuery, params)
             .then((result) => {
@@ -90,9 +93,13 @@ const findProduct = (query) => {
                         );
                         resolve(response);
                         console.log(response);
+                    })
+                    .catch((err) => {
+                        reject({ status: 500, err });
                     });
             })
             .catch((err) => {
+                console.log(err);
                 reject({ status: 500, err });
             });
     });
@@ -104,7 +111,7 @@ const updateProduct = (id, body, image) => {
         const sqlQuery =
             "UPDATE products SET product_name=COALESCE($1, product_name), price=COALESCE($2, price), description=COALESCE($3, description), updated_at=$4, image=COALESCE($5, image) WHERE id=$6 RETURNING *";
         const timestamp = new Date(Date.now());
-        console.log(sqlQuery);
+        // console.log(sqlQuery);
         db.query(sqlQuery, [product_name, price, description, timestamp, image, id])
             .then(({ rows }) => {
                 const response = {

@@ -53,7 +53,9 @@ const updatePromo = (id, body) => {
         const { promo_name, description_promo, promo_code } = body;
         const sqlQuery =
             "UPDATE promos SET promo_name=COALESCE($1, promo_name), description_promo=COALESCE($2, description_promo), promo_code=COALESCE($3, promo_code), timestamp=$4 WHERE id=$5 RETURNING*";
+
         const timestamp = new Date(Date.now());
+        // console.log(sqlQuery);
         db.query(sqlQuery, [promo_name, description_promo, promo_code, timestamp, id])
             .then(({ rows }) => {
                 const response = {

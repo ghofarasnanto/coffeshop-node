@@ -13,6 +13,7 @@ const imageUpload = require("../middlewares/uploadUsers");
 Router.post("/", UsersData, usersController.create);
 // melakukan pencarian user
 Router.get("/", checkToken, usersController.getAll);
+Router.get("/:id", checkToken, usersController.getById);
 // Update user
 // Router.put("/:id", checkToken, UsersData, usersController.update);
 Router.patch("/:username", checkToken, UsersData, imageUpload.single("photo"), usersController.update);

@@ -2,6 +2,7 @@ const transactionsModels = require("../models/transactionsModels");
 const {
     createTransaction,
     listAllTransactions,
+    TransactionsById,
     updateTransaction,
     deleteTransaction
 } = transactionsModels;
@@ -22,6 +23,7 @@ const create = (req, res) => {
         });
 };
 
+
 const getAll = (_, res) => {
     listAllTransactions()
         .then(({ data, total }) => {
@@ -33,6 +35,26 @@ const getAll = (_, res) => {
         .catch(({ status, err }) => {
             res.status(status).json({
                 data: [],
+                err,
+            });
+        });
+};
+
+
+const getById = (req, res) => {
+    const id = req.params.id;
+    TransactionsById(id)
+        .then(({ data }) => {
+            return res.status(201).send({
+                message: "Transaction Found",
+                data,
+            });
+        })
+        .catch((error) => {
+            const { err, status } = error;
+            res.status(status).json({
+                // return empty object
+                data: {},
                 err,
             });
         });
@@ -73,6 +95,7 @@ const update = (req, res) => {
 module.exports = {
     create,
     getAll,
+    getById,
     update,
     remove
 };

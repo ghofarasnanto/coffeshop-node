@@ -10,13 +10,13 @@ auth.register = (req, res) => {
     // expect sebuah body dengan
     // property email dan pass
     const {
-        body: { email, username, pass },
+        body: { email, mobileNumber, pass },
     } = req;
     bcrypt
         .hash(pass, 10)
         .then((hashedPassword) => {
             // console.log(hashedPassword);
-            register(email, username, hashedPassword)
+            register(email, mobileNumber, hashedPassword)
                 .then(() => {
                     successResponse(res, 201, { msg: "Register Success" }, null);
                 })
@@ -72,12 +72,12 @@ auth.signIn = async(req, res) => {
         };
         const jwtOptions = {
             issuer: process.env.JWT_ISSUER,
-            expiresIn: "500s", // expired in 500s
+            expiresIn: "500s", // expired in 1000s
         };
         // console.log(process.env);
         const token = jwt.sign(payload, process.env.JWT_SECRET, jwtOptions);
         // return
-        successResponse(res, 200, { email, token }, null);
+        successResponse(res, 200, { msg: "Login Success", email, token }, null);
     } catch (error) {
         console.log(error);
         const { status, err } = error;
