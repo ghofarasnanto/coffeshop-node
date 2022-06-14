@@ -1,11 +1,30 @@
 const db = require("../config/db");
 
+// const createProduct = (body) => {
+//     return new Promise((resolve, reject) => {
+//         const { product_name, description, price } = body;
+//         const sqlQuery =
+//             "INSERT INTO products(product_name, description, price) VALUES ($1, $2, $3) RETURNING*;";
+//         db.query(sqlQuery, [product_name, description, price])
+//             .then(result => {
+//                 const response = {
+//                     data: result.body,
+//                 };
+//                 resolve(response);
+//                 console.log(response);
+//             })
+//             .catch((err) => reject({ status: 500, err }));
+
+//     });
+// };
+
 const createProduct = (body) => {
     return new Promise((resolve, reject) => {
         const { product_name, description, price } = body;
         const sqlQuery =
-            "INSERT INTO products(product_name, description, price) VALUES ($1, $2, $3) RETURNING *;";
-        db.query(sqlQuery, [product_name, description, price])
+            "INSERT INTO products(product_name, description, price, created_at) VALUES ($1, $2, $3, $4);";
+        const timestamp = new Date(Date.now());
+        db.query(sqlQuery, [product_name, description, price, timestamp])
             .then(result => {
                 const response = {
                     data: result.body,
@@ -13,7 +32,6 @@ const createProduct = (body) => {
                 resolve(response);
             })
             .catch((err) => reject({ status: 500, err }));
-
     });
 };
 
