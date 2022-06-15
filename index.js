@@ -27,7 +27,7 @@ db.connect()
 
         // pasang cors
         const corsOptions = {
-            origin: "http://localhost:3000",
+            origin: ["https://coffeeshop-heroku.netlify.app", "http://localhost:3000"],
             // origin: "http://127.0.0.1:5500",
             methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
             allowedHeaders: ["Content-Type", "Authorization"],
