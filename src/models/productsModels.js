@@ -102,7 +102,7 @@ const findProduct = (query) => {
                 const response = {
                     data: result.rows,
                 };
-                let sqlQuery = !product_name ? "SELECT COUNT(*) as total FROM products" : "select count(*) as total, products.id as id from products INNER JOIN category ON products.category_id=category.id where lower(product_name) like lower ('%' || $1 || '%')";
+                let sqlQuery = !product_name ? "SELECT COUNT(*) as total FROM products" : "select count(*) as total from products INNER JOIN category ON products.category_id=category.id where lower(product_name) like lower ('%' || $1 || '%')";
                 if (!product_name && category) {
                     sqlQuery += " WHERE category_id=$1";
                 }
