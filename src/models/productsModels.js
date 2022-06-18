@@ -101,7 +101,19 @@ const findProduct = (query) => {
                 const response = {
                     data: result.rows,
                 };
-                db.query = !product_name ? "SELECT COUNT(*) AS total FROM products" : "select count(*) as total from products INNER JOIN category ON products.category_id=category.id where lower(product_name) like lower ('%' || $1 || '%')"
+                let sqlQuery = !product_name ? "SELECT COUNT(*) as total FROM products" : "select count(*) as total, products.id as id from products INNER JOIN category ON products.category_id=category.id where lower(product_name) like lower ('%' || $1 || '%')";
+                if (!product_name && category) {
+                    sqlQuery += " WHERE category_id=$1";
+                }
+                if (product_name && category) {
+                    sqlQuery += " AND category_id=$2";
+                }
+                if (order) {
+                    sqlQuery += " order by " + order + " " + sort;
+                }
+                const offset = (parseInt(page) - 1) * Number(limit);
+                sqlQuery += " LIMIT " + Number(limit) + " OFFSET " + offset;
+                db.query(sqlQuery)
                     .then((result) => {
                         response.total_data = parseInt(result.rows[0]["total"]);
                         response.page = parseInt(page);
