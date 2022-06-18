@@ -95,7 +95,6 @@ const findProduct = (query) => {
         }
         db.query(sqlQuery, params)
             .then((result) => {
-                const { product_name, category, order, sort, limit, page = 1 } = query;
                 if (result.rows.length === 0) {
                     return reject({ status: 404, err: "product Not Found" });
                 }
@@ -109,16 +108,7 @@ const findProduct = (query) => {
                 if (product_name && category) {
                     sqlQuery += " AND category_id=$2";
                 }
-                if (order) {
-                    sqlQuery += " order by " + order + " " + sort;
-                }
-                const offset = (parseInt(page) - 1) * Number(limit);
-                sqlQuery += " LIMIT " + Number(limit) + " OFFSET " + offset;
 
-                let params = !product_name ? [] : [product_name];
-                if (category) {
-                    params.push(parseInt(category));
-                }
                 db.query(sqlQuery, params)
                     .then((result) => {
                         response.total_data = parseInt(result.rows[0]["total"]);
