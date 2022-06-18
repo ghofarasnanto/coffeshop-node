@@ -95,7 +95,7 @@ const findProduct = (query) => {
         }
         db.query(sqlQuery, params)
             .then((result) => {
-                const { product_name, category, order, sort, limit = 4, page = 1 } = query;
+                const { product_name, category, order, sort, limit = 4, page = 1 } = params;
                 if (result.rows.length === 0) {
                     return reject({ status: 404, err: "product Not Found" });
                 }
