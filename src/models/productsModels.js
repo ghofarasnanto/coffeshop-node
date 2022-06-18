@@ -54,7 +54,7 @@ const listAllProducts = () => {
 const getSingleProduct = (id) => {
     return new Promise((resolve, reject) => {
         // parameterized query
-        const sqlQuery = "select * from products where id = $1";
+        const sqlQuery = "select *, category.category_name from products INNER JOIN category ON products.category_id=category.id where id = $1";
         db.query(sqlQuery, [id])
             .then((data) => {
                 if (data.rows.length === 0) {
