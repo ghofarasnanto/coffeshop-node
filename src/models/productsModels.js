@@ -114,7 +114,12 @@ const findProduct = (query) => {
                 }
                 const offset = (parseInt(page) - 1) * Number(limit);
                 sqlQuery += " LIMIT " + Number(limit) + " OFFSET " + offset;
-                db.query(sqlQuery)
+
+                let params = !product_name ? [] : [product_name];
+                if (category) {
+                    params.push(parseInt(category));
+                }
+                db.query(sqlQuery, params)
                     .then((result) => {
                         response.total_data = parseInt(result.rows[0]["total"]);
                         response.page = parseInt(page);
