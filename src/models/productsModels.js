@@ -101,7 +101,7 @@ const findProduct = (query) => {
                 const response = {
                     data: result.rows,
                 };
-                db.query("SELECT COUNT(*) AS total FROM products")
+                db.query = !product_name ? "SELECT COUNT(*) AS total FROM products" : "select count(*) as total from products INNER JOIN category ON products.category_id=category.id where lower(product_name) like lower ('%' || $1 || '%')"
                     .then((result) => {
                         response.total_data = parseInt(result.rows[0]["total"]);
                         response.page = parseInt(page);
