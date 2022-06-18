@@ -74,7 +74,7 @@ const getSingleProduct = (id) => {
 const findProduct = (query) => {
     return new Promise((resolve, reject) => {
         // asumsikan query berisikan category, order, sort
-        const { product_name, category, order, sort, limit = 4, page = 1 } = query;
+        const { product_name, category, order, sort, limit, page = 1 } = query;
         let sqlQuery = !product_name ? "SELECT * FROM products" : "select *, products.id as id from products INNER JOIN category ON products.category_id=category.id where lower(product_name) like lower ('%' || $1 || '%')";
         if (!product_name && category) {
             sqlQuery += " WHERE category_id=$1";
@@ -95,7 +95,7 @@ const findProduct = (query) => {
         }
         db.query(sqlQuery, params)
             .then((result) => {
-                const { product_name, category, order, sort, limit = 4, page = 1 } = params;
+                const { product_name, category, order, sort, limit, page = 1 } = query;
                 if (result.rows.length === 0) {
                     return reject({ status: 404, err: "product Not Found" });
                 }
