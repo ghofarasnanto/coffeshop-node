@@ -18,13 +18,13 @@ const db = require("../config/db");
 //     });
 // };
 
-const createProduct = (body, image) => {
+const createProduct = (body) => {
     return new Promise((resolve, reject) => {
         const { product_name, description, price, delivery_method, product_size, category_id, start_hour, end_hour, stock } = body;
         const sqlQuery =
-            "INSERT INTO products(product_name, description, price, delivery_method, product_size, category_id, start_hour, end_hour, stock, image, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);";
+            "INSERT INTO products(product_name, description, price, delivery_method, product_size, category_id, start_hour, end_hour, stock, image, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);";
         const timestamp = new Date(Date.now());
-        db.query(sqlQuery, [product_name, description, price, delivery_method, product_size, category_id, start_hour, end_hour, stock, image, timestamp])
+        db.query(sqlQuery, [product_name, description, price, delivery_method, product_size, category_id, start_hour, end_hour, stock, timestamp])
             .then(result => {
                 const response = {
                     data: result.body,
