@@ -2,11 +2,11 @@ const db = require("../config/db");
 
 const createTransaction = (body) => {
     return new Promise((resolve, reject) => {
-        const { product_id, quantity, delivery, subtotal, tax_shipping, payment_id, price, status } = body;
+        const { product_id, quantity, delivery, subtotal, tax_shipping, payment, price, status } = body;
         const sqlQuery =
-            "INSERT INTO transactions( product_id, quantity, delivery, subtotal, tax_shipping, payment_id, price, status, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);";
+            "INSERT INTO transactions( product_id, quantity, delivery, subtotal, tax_shipping, payment, price, status, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);";
         const timestamp = new Date(Date.now());
-        db.query(sqlQuery, [product_id, quantity, delivery, subtotal, tax_shipping, payment_id, price, status, timestamp])
+        db.query(sqlQuery, [product_id, quantity, delivery, subtotal, tax_shipping, payment, price, status, timestamp])
             .then(result => {
                 const response = {
                     data: result.body,
