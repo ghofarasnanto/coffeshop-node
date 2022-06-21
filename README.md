@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/assets/img/logo.png">
+  <img src="public/images/favicon.ico">
   <h1>COFFEE SHOP</h1>
 
 <br/>
@@ -8,7 +8,7 @@
 
 <br/>
 
-[![cors](https://img.shields.io/badge/cors-2.8.5-purple)](https://www.npmjs.com/package/cors) [![dotenv](https://img.shields.io/badge/dotenv-16.0.0-purple)](https://www.npmjs.com/package/dotenv)[![bcrypt](https://img.shields.io/badge/bcrypt-5.0.1-purple)](https://www.npmjs.com/package/bcrypt) [![express](https://img.shields.io/badge/Express-4.18.0-green)](https://www.npmjs.com/package/express) [![jsonwebtoken](https://img.shields.io/badge/jsonwebtoken-8.5.1-purple)](https://www.npmjs.com/package/jsonwebtoken) [![multer](https://img.shields.io/badge/multer-1.4.4-purple)](https://www.npmjs.com/package/multer) [![pg](https://img.shields.io/badge/pg-8.7.3-orange)](https://www.npmjs.com/package/pg)
+[![cors](https://img.shields.io/badge/cors-2.8.5-blue)](https://www.npmjs.com/package/cors) [![dotenv](https://img.shields.io/badge/dotenv-16.0.0-brightgreen)](https://www.npmjs.com/package/dotenv)[![bcrypt](https://img.shields.io/badge/bcrypt-5.0.1-purple)](https://www.npmjs.com/package/bcrypt) [![express](https://img.shields.io/badge/Express-4.18.0-green)](https://www.npmjs.com/package/express) [![jsonwebtoken](https://img.shields.io/badge/jsonwebtoken-8.5.1-yellowgreen)](https://www.npmjs.com/package/jsonwebtoken) [![multer](https://img.shields.io/badge/multer-1.4.4-purple)](https://www.npmjs.com/package/multer) [![pg](https://img.shields.io/badge/pg-8.7.3-orange)](https://www.npmjs.com/package/pg)
 
 <br/>
 
