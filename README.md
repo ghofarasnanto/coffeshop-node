@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/images/favicon.ico">
+  <img src="public/images/favi.ico">
   <h1>COFFEE SHOP</h1>
 
 <br/>
